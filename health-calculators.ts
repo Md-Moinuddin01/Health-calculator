@@ -1,0 +1,7 @@
+import { Gender, IdealWeights, WaterResult } from "./types.js";
+export function calculateBMR(weightKg:number,heightCm:number,age:number,gender:Gender):number { const base=10*weightKg+6.25*heightCm-5*age; return Math.round(base+(gender==="female"?-161:5)); }
+export function calculateTDEE(bmr:number,multiplier:number):number { return Math.round(bmr*multiplier); }
+export function calculateIdealWeight(heightCm:number,gender:Gender):IdealWeights { const inches=Math.max(0,heightCm/2.54-60), male=gender!=="female"; const vals={devine:(male?50:45.5)+(male?2.3:2.3)*inches,robinson:(male?52:49)+(male?1.9:1.7)*inches,miller:(male?56.2:53.1)+(male?1.41:1.36)*inches,hamwi:(male?48:45.5)+(male?2.7:2.2)*inches}; const rounded=Object.fromEntries(Object.entries(vals).map(([k,v])=>[k,Math.round(v*10)/10])) as Omit<IdealWeights,"average">; return {...rounded,average:Math.round((Object.values(vals).reduce((a,b)=>a+b,0)/4)*10)/10}; }
+export function estimateBodyFat(bmi:number,age:number,gender:Gender):number { return Math.round((1.2*bmi+.23*age-(gender==="female"?5.4:16.2))*10)/10; }
+export function calculateWaistToHeightRatio(waist:number,height:number):number { return Math.round(waist/height*100)/100; }
+export function calculateWaterIntake(weightKg:number,exerciseMinutes:number,hot:boolean,pregnancy:boolean):WaterResult { const ml=Math.round(weightKg*35+exerciseMinutes*12+(hot?500:0)+(pregnancy?500:0)); return {ml,litres:Math.round(ml/100)/10,glasses:Math.round(ml/250)}; }
